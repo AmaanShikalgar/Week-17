@@ -1,7 +1,9 @@
-// import { hostname } from 'node:os';
+import dotenv from "dotenv";
+dotenv.config();
+
 import { Client } from 'pg';
 
-const pgClient = new Client("postgresql://neondb_owner:npg_PElBbv5Ot4ix@ep-lingering-art-atidf1gz-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require")
+const pgClient = new Client(process.env.DB_URL)
 
 // const pgClient = new Client({
 //     user:"neondb_owner",
