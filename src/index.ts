@@ -1,23 +1,33 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import express from 'express';
 import { Client } from 'pg';
+
+const app = express();
+app.use(express.json());
 
 const pgClient = new Client(process.env.DB_URL)
 
-// const pgClient = new Client({
-//     user:"neondb_owner",
-//     password:"npg_PElBbv5Ot4ix",
-//     port:5432,
-//     host:"ep-lingering-art-atidf1gz-pooler.c-9.us-east-1.aws.neon.tech",
-//     database:"neondb",
-//     ssl:true
-// })
+pgClient.connect();
 
-async function main (){
-    await pgClient.connect();
-    const response =await pgClient.query("UPDATE users SET username='ishan' WHERE id=3")
-    console.log(response.rows)
-}
+app.post("/signup", async (req,res)=>{
+    const username = req.body.username;
+    const password = req.body.password;
+    const email = req.body.email;
 
-main();
+    try{
+        const insertQuery =`INSERT INTO users (username, email, password) VALUES ('${username}','${email}','${password}');`
+        await pgClient.query(insertQuery);
+        res.json({
+            message: "You have signed up"
+        })
+    }catch(err){
+        res.json({
+            message: "Erro while signing in"
+        })
+    }
+})
+
+app.listen(3000,function(){
+    console.log("server is running")
+})
