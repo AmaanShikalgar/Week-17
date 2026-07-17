@@ -51,7 +51,7 @@ app.post("/signup", async (req,res)=>{
 app.get("/metadata",async (req,res)=>{
     const id =req.query.id;
 
-    const query1 = `SELECT * FROM users WHERE id=$1`;
+    const query1 = `SELECT username,email,id FROM users WHERE id=$1`;
     const response1 = await pgClient.query(query1,[id]);
 
     const query2 = `SELECT * FROM addresses WHERE user_id=$1`;
@@ -59,7 +59,7 @@ app.get("/metadata",async (req,res)=>{
 
     res.json({
         user: response1.rows[0],
-        addresses: response2.rows[0]
+        addresses: response2.rows
     })
 })
 app.listen(3000,function(){
