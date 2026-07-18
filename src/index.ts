@@ -48,6 +48,10 @@ app.post("/signup", async (req,res)=>{
     }
 })
 
+app.get("/", (req,res)=>{
+    res.send("API is running");
+});
+
 app.get("/metadata",async (req,res)=>{
     const id =req.query.id;
 
@@ -62,6 +66,18 @@ app.get("/metadata",async (req,res)=>{
         addresses: response2.rows
     })
 })
+
+app.get("/better-metadata",async (req,res)=>{
+    const id =req.query.id;
+
+    const query = 'SELECT users.id, users.username, users.email, addresses.city, addresses.country, addresses.street, addresses.pincode FROM users LEFT JOIN addresses ON users.id = addresses.user_id WHERE users.id = $1;'
+
+    const response = await pgClient.query(query,[id]);
+    res.json({
+        response: response.rows
+    })
+})
+
 app.listen(3000,function(){
     console.log("server is running")
 })
